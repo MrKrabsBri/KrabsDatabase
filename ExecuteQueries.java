@@ -2,14 +2,18 @@ package com.krabs;
 
 import com.krabs.DatabaseConnector;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class ExecuteQueries {
-    public static void PrintPeople(String dbName) {
-        try (Connection connection = DatabaseConnector.getConnection(dbName);
+    public static void PrintPeople(String dbName) throws SQLException {
+
+        DatabaseConnector databaseConnection = new DatabaseConnector(dbName);
+
+        try (Connection connection = databaseConnection.getConnection();
              Statement statement = connection.createStatement()) {
             String query = "SELECT * FROM hotelvisitors";
             ResultSet resultSet = statement.executeQuery(query);
