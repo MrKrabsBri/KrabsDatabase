@@ -9,12 +9,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class ExecuteQueries {
-    public static void PrintPeople(String dbName) throws SQLException {
+    public static void PrintPeople(Connection con, String dbName)  {
 
-        DatabaseConnector databaseConnection = new DatabaseConnector(dbName);
+       // DatabaseConnector databaseConnection = new DatabaseConnector(dbName);
 
-        try (Connection connection = databaseConnection.getConnection();
-             Statement statement = connection.createStatement()) {
+        try (/*Connection connection = DatabaseConnector.getConnection(dbName)*/; Statement statement = con.createStatement()) {
             String query = "SELECT * FROM hotelvisitors";
             ResultSet resultSet = statement.executeQuery(query);
 
