@@ -11,14 +11,13 @@ public class DatabaseConnector {
     static {
         // Initialize the connection pool
         dataSource = new BasicDataSource();
+
        // dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3306/");
         dataSource.setUsername("root");
         dataSource.setPassword("pw");
-    }
+        dataSource.setInitialSize(5);
+        dataSource.setMaxTotal(10);
 
-    public static Connection getConnection(String dbName) throws SQLException {
-        dataSource.setUrl("jdbc:mysql://localhost:3306/"+ dbName);
-        return dataSource.getConnection();
     }
 }

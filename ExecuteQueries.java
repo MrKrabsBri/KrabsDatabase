@@ -13,7 +13,7 @@ public class ExecuteQueries {
 
        // DatabaseConnector databaseConnection = new DatabaseConnector(dbName);
 
-        try (/*Connection connection = DatabaseConnector.getConnection(dbName)*/; Statement statement = con.createStatement()) {
+        try (/*Connection connection = DatabaseConnector.getConnection(dbName)*/ Statement statement = con.createStatement()) {
             String query = "SELECT * FROM hotelvisitors";
             ResultSet resultSet = statement.executeQuery(query);
 
