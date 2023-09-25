@@ -5,60 +5,24 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-//public class DatabaseManager {
-//
-//    private final BlockingQueue<Connection> pool;
-//
-//    public CustomConnectionPool(String jdbcUrl, String username, String password, int poolSize) throws SQLException {
-//        pool = new ArrayBlockingQueue<>(poolSize);
-//        for (int i = 0; i < poolSize; i++) {
-//            Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
-//            pool.offer(connection);
-//        }
-//    }
-//
-//    public Connection getConnection() throws InterruptedException {
-//        return pool.take();
-//    }
-//
-//    public void releaseConnection(Connection connection) throws SQLException {
-//        if (connection != null && !connection.isClosed()) {
-//            pool.offer(connection);
-//        }
-//    }
-//
-//}
 
 public class DatabaseManager {
+    private static BasicDataSource dataSource;
 
-        // Configure a BasicDataSource with connection pool settings
-        private BasicDataSource dataSource;
+    static {
+        // Initialize the connection pool
+        dataSource = new BasicDataSource();
 
+       // dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/jdbchoteldb");
+        dataSource.setUsername("root");
+        dataSource.setPassword("pw");
+        dataSource.setInitialSize(5);
+        dataSource.setMaxTotal(10);
 
-        public DatabaseManager(String jdbcUrl, String username, String password) throws SQLException {
+    }
 
-                dataSource = new BasicDataSource();
-                dataSource.setUrl(jdbcUrl);//"jdbc:mysql://localhost:3306/your_database"
-                dataSource.setUsername(username);
-                dataSource.setPassword(password);
-                dataSource.setInitialSize(5); // Initial number of connections
-                dataSource.setMaxTotal(10); // Maximum number of connections
-
-        }
-
-
-
-
-
-
-        // Create an executor service with multiple threads
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
-
-
-        // Shutdown the executor service
-        executorService.shutdown();
-
-
-
-
+    public static Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
+    }
 }
