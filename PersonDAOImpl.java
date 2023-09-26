@@ -7,6 +7,12 @@ import java.sql.*;
 
 public class PersonDAOImpl implements PersonDAO { //contains interfaces
 
+    private BasicDataSource dataSource;
+
+    public PersonDAOImpl(BasicDataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
     private DatabaseManager databaseManager;
 
     public PersonDAOImpl(DatabaseManager databaseManager){
@@ -26,10 +32,8 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
                 // Set the parameters for the prepared statement
                 preparedStatement.setString(1, person.getName());
                 preparedStatement.setString(2, person.getSurname());
-                System.out.println(Statement.RETURN_GENERATED_KEYS);
 
                int rowsAffected = preparedStatement.executeUpdate();
-                System.out.println(rowsAffected);
 
                 if(rowsAffected == 1){
 
@@ -43,20 +47,12 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
                     }
 
 
-//                    ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-//                    System.out.println(generatedKeys);
-//                    if (generatedKeys.next()){
-//                        int generatedId = generatedKeys.getInt(1);
-//                        person.setId(generatedId);
-//                        System.out.println("Person added");
-//                        System.out.println(generatedId);
-//                    }
                 } else {
                     System.out.println("Insertion was not successful.");
                 }
 
                 // Execute the SQL insert statement
-                preparedStatement.executeUpdate();
+               // preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
             System.out.println("SQL exception caught.");
