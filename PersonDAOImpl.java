@@ -33,10 +33,9 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
                 preparedStatement.setString(1, person.getName());
                 preparedStatement.setString(2, person.getSurname());
 
-               int rowsAffected = preparedStatement.executeUpdate();
+                int rowsAffected = preparedStatement.executeUpdate();
 
                 if(rowsAffected == 1){
-
                     try(ResultSet generatedKeys = preparedStatement.getGeneratedKeys()){
                         if (generatedKeys.next()) {
                             int generatedKey = generatedKeys.getInt(1); // Retrieve the generated key value
@@ -46,19 +45,16 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
                         }
                     }
 
-
                 } else {
                     System.out.println("Insertion was not successful.");
                 }
 
-                // Execute the SQL insert statement
-               // preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
-            System.out.println("SQL exception caught.");
+            System.out.println("SQL exception for CREATE was caught.");
+            e.printStackTrace();
         }
     }
-
 
 
     //read
@@ -87,7 +83,8 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
                 }
             }
         } catch (SQLException e){
-            System.out.println("SQL Exception caught.");
+            System.out.println("SQL exception for READ was caught: ");
+            e.printStackTrace();
             return null;
         }
 
@@ -95,8 +92,28 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
     }
 
     @Override
-    public void updatePerson(Person person) {
+    public void updatePerson(Person person, int id) {
+        String updateQuery = "UPDATE hotelvisitors SET name = ?, surname = ? WHERE ID = ?";
 
+        try (Connection connection = databaseManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+            preparedStatement.setString(1, person.getName());
+            preparedStatement.setString(2, person.getSurname());
+            preparedStatement.setInt(3, id);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected == 1) {
+                System.out.println("Person with ID " + id + " updated successfully.");
+            } else {
+                System.err.println("Update operation did not affect one row as expected.");
+                // Handle the case where the update didn't succeed
+                // You can throw an exception or handle it based on your application's requirements
+            }
+        } catch (SQLException e){
+            System.out.println("SQL exception for UPDATE was caught: ");
+            e.printStackTrace();
+        }
     }
 
     @Override

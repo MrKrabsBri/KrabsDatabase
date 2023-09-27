@@ -6,30 +6,19 @@ import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) {
-//        String databaseName = "jdbchoteldb";
-
-//        CreatePerson.createPersonTable(con);
-//        String username = "MrKrabs";
-//        String email = "Eugene.Krabs@gmail.com";
-//        String password = "Qwerty";
-//        String database1 = "users";
-//        CRUDoperations.createOperation(con,database1,username,email,password);
 
         DatabaseManager databaseManager = new DatabaseManager();
-
         PersonDAO personDAO = new PersonDAOImpl(databaseManager);
 
-
-        // Create a new Person
-        Person newPerson = new Person();
-        newPerson.setName("Eugene");
-        newPerson.setSurname("Krabs Sr.");
-
-        //create
-        personDAO.createPerson(newPerson);
+//        // Create a new Person
+//        Person newPerson = new Person();
+//        newPerson.setName("Eugene");
+//        newPerson.setSurname("Krabs");
+//        //create
+//        personDAO.createPerson(newPerson);
 
         //read
-        int personIdToRead = 2;
+        int personIdToRead = 10;
         Person retrievedPerson = personDAO.readPerson(personIdToRead);
 
         if (retrievedPerson != null) {
@@ -40,5 +29,11 @@ public class Main {
             System.out.println("No person found with ID: " + personIdToRead);
         }
 
+        //update
+        Person personToUpdate = new Person();
+        personToUpdate.setName("Sandy");
+        personToUpdate.setSurname("Cheeks");
+        int idToUpdate = 10; // hardcoded id to Update
+        personDAO.updatePerson(personToUpdate,idToUpdate);
     }
 }
