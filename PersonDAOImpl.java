@@ -91,8 +91,10 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
 
     }
 
+
+    //update
     @Override
-    public void updatePerson(Person person, int id) {
+    public void updatePerson(Person person, int id) { // pass a new person as an argument, ID of the current person.
         String updateQuery = "UPDATE hotelvisitors SET name = ?, surname = ? WHERE ID = ?";
 
         try (Connection connection = databaseManager.getConnection();
@@ -117,7 +119,24 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
     }
 
     @Override
-    public void deletePerson(int id) {
+    public void deletePerson(int personId) {
+        String deleteQuery = "DELETE FROM hotelvisitors WHERE ID = ?";
+
+        try (Connection connection = databaseManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
+            preparedStatement.setInt(1, personId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected == 1) {
+                System.out.println("Person with ID " + personId + " deleted successfully.");
+            } else {
+                System.err.println("Delete operation did not affect one row as expected.");
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL exception for DELETE was caught: ");
+            e.printStackTrace();
+        }
 
     }
 }

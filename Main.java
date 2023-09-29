@@ -10,7 +10,7 @@ public class Main {
         DatabaseManager databaseManager = new DatabaseManager();
         PersonDAO personDAO = new PersonDAOImpl(databaseManager);
 
-//        // Create a new Person
+//        // Create
 //        Person newPerson = new Person();
 //        newPerson.setName("Eugene");
 //        newPerson.setSurname("Krabs");
@@ -29,11 +29,19 @@ public class Main {
             System.out.println("No person found with ID: " + personIdToRead);
         }
 
-        //update
-        Person personToUpdate = new Person();
-        personToUpdate.setName("Sandy");
-        personToUpdate.setSurname("Cheeks");
-        int idToUpdate = 10; // hardcoded id to Update
-        personDAO.updatePerson(personToUpdate,idToUpdate);
+//        //update
+//        Person personToUpdate = new Person();
+//        personToUpdate.setName("Sandy");
+//        personToUpdate.setSurname("Cheeks");
+//        int idToUpdate = 10; // hardcoded id to Update
+//        personDAO.updatePerson(personToUpdate,idToUpdate);
+
+        //delete
+        int idToDelete = 13;
+        personDAO.deletePerson(idToDelete);
+
+
+
+
     }
 }
