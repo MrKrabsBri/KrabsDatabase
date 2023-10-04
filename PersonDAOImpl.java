@@ -1,7 +1,6 @@
 package com.krabs;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.w3c.dom.ls.LSOutput;
 
 import java.sql.*;
 
@@ -13,6 +12,14 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
         this.dataSource = dataSource;
     }
 
+    public boolean isNameValid(String name) {
+        // Check if the name is not null and not empty
+        return name != null && !name.trim().isEmpty();
+    }
+    public boolean isSurnameValid(String surname) {
+        // Check if the surname is not null and not empty
+        return surname != null && !surname.trim().isEmpty();
+    }
     private DatabaseManager databaseManager;
 
     public PersonDAOImpl(DatabaseManager databaseManager){
@@ -24,14 +31,27 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
     @Override
     public void createPerson(Person person) {
 
+        if (!isNameValid(person.getFirstname())) {
+            System.err.println("Invalid name. Please provide a valid name.");
+            return; // Don't proceed with the database operation
+        }
+
+        if (!isSurnameValid(person.getLastname())) {
+            System.err.println("Invalid surname. Please provide a valid surname.");
+            return; // Don't proceed with the database operation
+        }
+
         try (Connection connection = databaseManager.getConnection()) {
             // SQL query for inserting a new person
-            String insertQuery = "INSERT INTO hotelvisitors (name, surname) VALUES (?, ?)";
+            String insertQuery = "INSERT INTO staff (firstname, lastname, email, username, position) VALUES (?, ?, ?, ?, ?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
                 // Set the parameters for the prepared statement
-                preparedStatement.setString(1, person.getName());
-                preparedStatement.setString(2, person.getSurname());
+                preparedStatement.setString(1, person.getFirstname());
+                preparedStatement.setString(2, person.getLastname());
+                preparedStatement.setString(3, person.getEmail());
+                preparedStatement.setString(4, person.getUsername());
+                preparedStatement.setString(5, person.getPosition());
 
                 int rowsAffected = preparedStatement.executeUpdate();
 
@@ -44,7 +64,6 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
                             System.err.println("No generated keys found.");
                         }
                     }
-
                 } else {
                     System.out.println("Insertion was not successful.");
                 }
@@ -63,7 +82,7 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
 
         try (Connection connection = databaseManager.getConnection()) {
             // SQL query for retrieving a person by ID
-            String selectQuery = "SELECT id, name, surname FROM hotelvisitors WHERE id = ?";
+            String selectQuery = "SELECT firstname, lastname, email, username FROM staff WHERE id = ?";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
                 preparedStatement.setInt(1, id);
@@ -73,8 +92,11 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
                         // Create a new Person object with data from the result set
                         Person person = new Person();
                         person.setId(resultSet.getInt("id"));
-                        person.setName(resultSet.getString("name"));
-                        person.setSurname(resultSet.getString("surname"));
+                        person.setFirstname(resultSet.getString("firstname"));
+                        person.setLastname(resultSet.getString("lastname"));
+                        person.setEmail(resultSet.getString("email"));
+                        person.setUsername(resultSet.getString("username"));
+                        person.setPosition(resultSet.getString("position"));
                         return person;
                     } else {
                         // No matching person found
@@ -87,21 +109,21 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
             e.printStackTrace();
             return null;
         }
-
-
     }
-
 
     //update
     @Override
     public void updatePerson(Person person, int id) { // pass a new person as an argument, ID of the current person.
-        String updateQuery = "UPDATE hotelvisitors SET name = ?, surname = ? WHERE ID = ?";
+        String updateQuery = "UPDATE staff SET name = ?, surname = ?, email = ?, username = ? WHERE ID = ?";
 
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
-            preparedStatement.setString(1, person.getName());
-            preparedStatement.setString(2, person.getSurname());
-            preparedStatement.setInt(3, id);
+            preparedStatement.setString(1, person.getFirstname());
+            preparedStatement.setString(2, person.getLastname());
+            preparedStatement.setString(3, person.getEmail());
+            preparedStatement.setString(4, person.getUsername());
+            preparedStatement.setString(5, person.getPosition());
+            preparedStatement.setInt(6, id);
 
             int rowsAffected = preparedStatement.executeUpdate();
 
@@ -120,7 +142,7 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
 
     @Override
     public void deletePerson(int personId) {
-        String deleteQuery = "DELETE FROM hotelvisitors WHERE ID = ?";
+        String deleteQuery = "DELETE FROM staff WHERE ID = ?";
 
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {

@@ -13,8 +13,8 @@ public class DatabaseManager {
         // Initialize the connection pool
         dataSource = new BasicDataSource();
 
-       // dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/jdbchoteldb");
+       //dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/krustykrabrestaurant");
         dataSource.setUsername("root");
         dataSource.setPassword("pw");
         dataSource.setInitialSize(5);
