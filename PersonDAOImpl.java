@@ -14,11 +14,11 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
 
     public boolean isNameValid(String name) {
         // Check if the name is not null and not empty
-        return name != null && !name.trim().isEmpty();
+        return name != null && !name.trim().isEmpty() && name.matches("[A-Za-z]+");
     }
     public boolean isSurnameValid(String surname) {
         // Check if the surname is not null and not empty
-        return surname != null && !surname.trim().isEmpty();
+        return surname != null && !surname.trim().isEmpty() && surname.matches("[A-Za-z]+");
     }
     private DatabaseManager databaseManager;
 

@@ -24,10 +24,10 @@ public class Main {
 
         // Create
         Person newPerson = new Person();
-        newPerson.setFirstname("Eugene1");
+        newPerson.setFirstname("");
         newPerson.setLastname("Krabs");
-        newPerson.setEmail("Eugene.Krabs@krustykrab.com");
-        newPerson.setUsername("eugkra");
+        newPerson.setEmail("Eugene.Krabs1@krustykrab.com");
+        newPerson.setUsername("eugkra1");
         newPerson.setPosition("CEO");
         //create
         personDAO.createPerson(newPerson);
