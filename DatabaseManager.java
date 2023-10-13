@@ -14,7 +14,8 @@ public class DatabaseManager {
         dataSource = new BasicDataSource();
 
        //dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/krustykrabrestaurant");
+
+        //dataSource.setUrl("jdbc:mysql://localhost:3306/krustykrabrestaurant");
         dataSource.setUsername("root");
         dataSource.setPassword("pw");
         dataSource.setInitialSize(5);
@@ -22,7 +23,8 @@ public class DatabaseManager {
 
     }
 
-    public static Connection getConnection() throws SQLException {
+    public static Connection getConnection(String url) throws SQLException {
+        dataSource.setUrl(url);
         return dataSource.getConnection();
     }
 }

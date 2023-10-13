@@ -20,6 +20,14 @@ public class Person {
         this.surname = surname;
     }
 
+    public Person(String name, String surname, String email, String username, String position) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.username = username;
+        this.position = position;
+    }
+
     public void setFirstname(String name) {
         this.name = name;
     }

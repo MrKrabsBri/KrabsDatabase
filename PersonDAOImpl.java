@@ -7,6 +7,8 @@ import java.sql.*;
 public class PersonDAOImpl implements PersonDAO { //contains interfaces
 
     private BasicDataSource dataSource;
+    boolean personCreated;
+
 
     public PersonDAOImpl(BasicDataSource dataSource) {
         this.dataSource = dataSource;
@@ -29,21 +31,23 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
 
     //create
     @Override
-    public void createPerson(Person person) {
+    public int createPerson(String dbUrl, String insertQuery,  Person person) {
+
+        int generatedKey = -1;
 
         if (!isNameValid(person.getFirstname())) {
             System.err.println("Invalid name. Please provide a valid name.");
-            return; // Don't proceed with the database operation
+            return generatedKey; // Don't proceed with the database operation
         }
 
         if (!isSurnameValid(person.getLastname())) {
             System.err.println("Invalid surname. Please provide a valid surname.");
-            return; // Don't proceed with the database operation
+            return generatedKey; // Don't proceed with the database operation
         }
 
-        try (Connection connection = databaseManager.getConnection()) {
+        try (Connection connection = databaseManager.getConnection(dbUrl)) {
             // SQL query for inserting a new person
-            String insertQuery = "INSERT INTO staff (firstname, lastname, email, username, position) VALUES (?, ?, ?, ?, ?)";
+            //String insertQuery = "INSERT INTO staff (firstname, lastname, email, username, position) VALUES (?, ?, ?, ?, ?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
                 // Set the parameters for the prepared statement
@@ -58,7 +62,8 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
                 if(rowsAffected == 1){
                     try(ResultSet generatedKeys = preparedStatement.getGeneratedKeys()){
                         if (generatedKeys.next()) {
-                            int generatedKey = generatedKeys.getInt(1); // Retrieve the generated key value
+                            generatedKey = generatedKeys.getInt(1); // Retrieve the generated key value
+                            personCreated = true;
                             System.out.println("Generated Key: " + generatedKey);
                         } else {
                             System.err.println("No generated keys found.");
@@ -73,19 +78,19 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
             System.out.println("SQL exception for CREATE was caught.");
             e.printStackTrace();
         }
+        return generatedKey;
     }
 
 
     //read
     @Override
-    public Person readPerson(int id) {
+    public Person readPerson(String dbUrl, String selectQuery, int idPerson) {
 
-        try (Connection connection = databaseManager.getConnection()) {
+        try (Connection connection = databaseManager.getConnection(dbUrl)) {
             // SQL query for retrieving a person by ID
-            String selectQuery = "SELECT firstname, lastname, email, username FROM staff WHERE id = ?";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
-                preparedStatement.setInt(1, id);
+                preparedStatement.setInt(1, idPerson);
 
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     if (resultSet.next()) {
@@ -113,10 +118,10 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
 
     //update
     @Override
-    public void updatePerson(Person person, int id) { // pass a new person as an argument, ID of the current person.
-        String updateQuery = "UPDATE staff SET name = ?, surname = ?, email = ?, username = ? WHERE ID = ?";
+    public void updatePerson(String dbUrl, Person person, int id) { // pass a new person as an argument, ID of the current person.
+        String updateQuery = "UPDATE staff SET name = ?, surname = ?, email = ?, username = ?, position = ? WHERE ID = ?";
 
-        try (Connection connection = databaseManager.getConnection();
+        try (Connection connection = databaseManager.getConnection(dbUrl);
              PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
             preparedStatement.setString(1, person.getFirstname());
             preparedStatement.setString(2, person.getLastname());
@@ -141,10 +146,10 @@ public class PersonDAOImpl implements PersonDAO { //contains interfaces
     }
 
     @Override
-    public void deletePerson(int personId) {
+    public void deletePerson(String dbUrl, int personId) {
         String deleteQuery = "DELETE FROM staff WHERE ID = ?";
 
-        try (Connection connection = databaseManager.getConnection();
+        try (Connection connection = databaseManager.getConnection(dbUrl);
              PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
             preparedStatement.setInt(1, personId);
 

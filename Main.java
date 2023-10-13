@@ -1,10 +1,15 @@
 package com.krabs;
 
+
+
 public class Main {
     public static void main(String[] args) {
 
         DatabaseManager databaseManager = new DatabaseManager();
         PersonDAO personDAO = new PersonDAOImpl(databaseManager);
+        String dbUrl = "jdbc:mysql://localhost:3306/krustykrabrestaurant";
+        String insertQuery = "INSERT INTO staff (firstname, lastname, email, username, position) VALUES (?, ?, ?, ?, ?)";
+
 //        try{
 //            DatabaseManager.getConnection();
 //        } catch(SQLException e){
@@ -22,24 +27,25 @@ public class Main {
 //        QueryManager.createPersonTable(createTableSQL);
 
 
-        // Create
+//        // Create
         Person newPerson = new Person();
-        newPerson.setFirstname("");
-        newPerson.setLastname("Krabs");
-        newPerson.setEmail("Eugene.Krabs1@krustykrab.com");
-        newPerson.setUsername("eugkra1");
-        newPerson.setPosition("CEO");
+        newPerson.setFirstname("Spongebob");
+        newPerson.setLastname("Squarepants");
+        newPerson.setEmail("SP.SQ@krustykrab.com");
+        newPerson.setUsername("sposqu");
+        newPerson.setPosition("Frycook");
         //create
-        personDAO.createPerson(newPerson);
+        personDAO.createPerson(dbUrl, insertQuery, newPerson);
 
-        //read
-//        int personIdToRead = 10;
-//        Person retrievedPerson = personDAO.readPerson(personIdToRead);
+
+        // Read
+//        int personIdToRead = 8;
+//        Person retrievedPerson = personDAO.readPerson(dbUrl,personIdToRead);
 //
 //        if (retrievedPerson != null) {
 //            // Print or work with the retrieved person
 //            System.out.println("Retrieved Person: " + retrievedPerson.getId()+ " "  +
-//                    retrievedPerson.getName() + " " + retrievedPerson.getSurname());
+//                    retrievedPerson.getFirstname() + " " + retrievedPerson.getLastname());
 //        } else {
 //            System.out.println("No person found with ID: " + personIdToRead);
 //        }

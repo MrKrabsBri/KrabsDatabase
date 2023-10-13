@@ -8,9 +8,9 @@ public class QueryManager {
 
     private static DatabaseManager databaseManager;
 
-    public static void createPersonTable(String sqlQuery){
+    public static void createPersonTable(String dbUrl, String sqlQuery){
 
-        try (Connection connection = databaseManager.getConnection()) {
+        try (Connection connection = databaseManager.getConnection(dbUrl)) {
 
                 Statement statement = connection.createStatement();
                 statement.executeUpdate(sqlQuery);
